@@ -21,6 +21,10 @@ export class CategoryRepository {
     return this.prisma.category.findUnique({ where: { id: categoryId } });
   }
 
+  findTodosByCategory(categoryId: number) {
+    return this.prisma.todo.findMany({ where: { categoryId } });
+  }
+
   create(data: Prisma.CategoryCreateInput) {
     return this.prisma.category.create({ data });
   }

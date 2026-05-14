@@ -24,6 +24,20 @@ export class CategoryService {
     };
   }
 
+  async findTodosByCategory(categoryId: number) {
+    const category = await this.repo.findOne(categoryId);
+    if (!category) throw new NotFoundException('category not found');
+
+    const todos = await this.repo.findTodosByCategory(categoryId);
+    if (!todos) throw new NotFoundException('todo not found');
+
+    return {
+      success: true,
+      message: `your ${category.name} todo list`,
+      data: todos,
+    };
+  }
+
   async createCategory(dto: CreateCategoryDto) {
     await this.repo.create(dto);
 

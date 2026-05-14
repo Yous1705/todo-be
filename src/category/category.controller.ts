@@ -20,6 +20,11 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
+  @Get(':id/todos')
+  findTodosByCategory(@Param('id') categoryId: number) {
+    return this.categoryService.findTodosByCategory(categoryId);
+  }
+
   @Post()
   create(@Body() dto: CreateCategoryDto) {
     return this.categoryService.createCategory(dto);
