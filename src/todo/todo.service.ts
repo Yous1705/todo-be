@@ -15,13 +15,6 @@ export class TodoService {
 
     const todos = await this.repo.findAll(page, limit);
 
-    if (!todos) {
-      return {
-        success: true,
-        message: 'your todo list doesnt exist yet',
-      };
-    }
-
     return {
       success: true,
       message: 'your todo list',
@@ -31,13 +24,6 @@ export class TodoService {
 
   async searchTodo(dto: SearchTodoDto) {
     const todos = await this.repo.search(dto);
-
-    if (!todos) {
-      return {
-        success: true,
-        message: 'your todo list doesnt exist yet',
-      };
-    }
 
     return {
       success: true,
