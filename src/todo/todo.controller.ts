@@ -12,14 +12,15 @@ import { TodoService } from './todo.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { SearchTodoDto } from './dto/search-todo.dto';
+import { PaginationDto } from './dto/pagination-todo.dto';
 
 @Controller('todo')
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   @Get()
-  findAll() {
-    return this.todoService.findAll();
+  findAll(@Query() query: PaginationDto) {
+    return this.todoService.findAll(query);
   }
 
   @Get('search')

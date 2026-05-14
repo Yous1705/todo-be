@@ -3,13 +3,17 @@ import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { TodoRepository } from './todo.repository';
 import { SearchTodoDto } from './dto/search-todo.dto';
+import { PaginationDto } from './dto/pagination-todo.dto';
 
 @Injectable()
 export class TodoService {
   constructor(private readonly repo: TodoRepository) {}
 
-  async findAll() {
-    const todos = await this.repo.findAll();
+  async findAll(dto: PaginationDto) {
+    const page = dto.page ?? 1;
+    const limit = dto.limit ?? 10;
+
+    const todos = await this.repo.findAll(page, limit);
 
     if (!todos) {
       return {

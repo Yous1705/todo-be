@@ -7,22 +7,44 @@ import { SearchTodoDto } from './dto/search-todo.dto';
 export class TodoRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.todo.findMany({
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        status: true,
-        priority: true,
-        due_date: true,
-        category: {
-          select: {
-            name: true,
+  async findAll(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    const [todos, total] = await Promise.all([
+      this.prisma.todo.findMany({
+        skip,
+        take: limit,
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          status: true,
+          priority: true,
+          due_date: true,
+          category: {
+            select: {
+              name: true,
+            },
           },
         },
+      }),
+
+      this.prisma.todo.count(),
+    ]);
+
+    return {
+      data: todos,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+        hasNextPage: page < Math.ceil(total / limit),
+        hasPreviousPage: page > 1,
       },
-    });
+    };
   }
 
   findOne(todoId: number) {
