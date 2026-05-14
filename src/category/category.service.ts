@@ -10,13 +10,6 @@ export class CategoryService {
   async findAll() {
     const categories = await this.repo.findAll();
 
-    if (!categories) {
-      return {
-        success: true,
-        message: 'your category list doesnt exist yet',
-      };
-    }
-
     return {
       success: true,
       message: 'your category list',
