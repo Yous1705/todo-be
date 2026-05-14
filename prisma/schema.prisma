@@ -19,16 +19,24 @@ enum TodoStatus {
   INCOMPLETE
 }
 
+enum TodoPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
 model Todo {
   id Int @id @default(autoincrement())
+
   title String
-  description String db.Text
+  description String @db.Text
   status TodoStatus @default(INCOMPLETE)
-  priority String
+  priority TodoPriority @default(LOW)
   due_date DateTime
 
-  categoryId Int?
-  category Category? @relation(fields:[categoryId], references:[id])
+  categoryId  Int?
+  category    Category? @relation(fields: [categoryId], references: [id])
   
 
   createdAt  DateTime    @default(now())
@@ -39,6 +47,7 @@ model Category {
   id Int @id @default(autoincrement())
   name String
   color String
+  todo Todo[]
 
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
