@@ -22,7 +22,6 @@ export class CategoryService {
     if (!category) throw new NotFoundException('category not found');
 
     const todos = await this.repo.findTodosByCategory(categoryId);
-    if (!todos) throw new NotFoundException('todo not found');
 
     return {
       success: true,
