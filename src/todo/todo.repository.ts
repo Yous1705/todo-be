@@ -25,7 +25,9 @@ export class TodoRepository {
           due_date: true,
           category: {
             select: {
+              id: true,
               name: true,
+              color: true,
             },
           },
         },

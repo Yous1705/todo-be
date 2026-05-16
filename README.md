@@ -1,98 +1,141 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Todo List & Category Management Dashboard
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+![NestJS](https://img.shields.io/badge/NestJS-v9.0.0-red) ![Prisma](https://img.shields.io/badge/Prisma-v4.0.0-blue) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-v14.0-green)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Project Overview
 
-## Description
+This project is a **Todo List & Category Management Dashboard** built with a **NestJS backend** and **Prisma ORM** for database management. It allows users to manage tasks (todos) and categories efficiently with features like:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Multi-parameter Search Filtering**: Search todos by title, priority, and status.
+- **Category Management**: Create, update, and delete categories with conditional visibility.
+- **Efficient Pagination**: Paginate todos and categories for better performance.
 
-## Project setup
+---
+
+## Setup & Installation
+
+Follow these steps to set up and run the project locally:
+
+### 1. Clone the Repository
 
 ```bash
-$ pnpm install
+# Clone the repository
+git clone https://github.com/Yous1705/todo-be.git
+cd todo-be
 ```
 
-## Compile and run the project
+### 2. Install Dependencies
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+# Install backend dependencies
+pnpm install
 ```
 
-## Run tests
+### 3. Set Up Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+DATABASE_URL=postgresql://<username>:<password>@localhost:5432/todo_db
+PORT=3000
+```
+
+### 4. Run Database Migrations
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+# Apply Prisma migrations
+pnpm prisma migrate dev
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 5. Start the Application
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+# Start the backend server
+pnpm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 6. Run Tests (Optional)
 
-## Resources
+```bash
+# Run unit tests
+pnpm run test
 
-Check out a few resources that may come in handy when working with NestJS:
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+## API Documentation
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Todo Endpoints
 
-## Stay in touch
+| Method | Endpoint       | Description       | Query/Body Parameters                                        |
+| ------ | -------------- | ----------------- | ------------------------------------------------------------ |
+| GET    | `/todo`        | Get all todos     | `page`, `limit`                                              |
+| GET    | `/todo/search` | Search todos      | `title`, `priority`, `status`                                |
+| POST   | `/todo`        | Create a new todo | `title`, `description`, `priority`, `due_date`, `categoryId` |
+| PATCH  | `/todo/:id`    | Update a todo     | `title`, `description`, `priority`, `status`                 |
+| DELETE | `/todo/:id`    | Delete a todo     | -                                                            |
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Category Endpoints
+
+| Method | Endpoint              | Description              | Query/Body Parameters |
+| ------ | --------------------- | ------------------------ | --------------------- |
+| GET    | `/category`           | Get all categories       | -                     |
+| GET    | `/category/:id/todos` | Get todos by category ID | -                     |
+| POST   | `/category`           | Create a new category    | `name`, `color`       |
+| PATCH  | `/category/:id`       | Update a category        | `name`, `color`       |
+| DELETE | `/category/:id`       | Delete a category        | -                     |
+
+---
+
+## Technical Questions
+
+### A. Database Design
+
+#### 1. What database tables did you create and why?
+
+- **Todo Table**: Stores tasks with fields like `title`, `description`, `status`, `priority`, `due_date`, and `categoryId`. The `categoryId` establishes a one-to-many relationship with the `Category` table.
+- **Category Table**: Stores categories with fields like `name` and `color`. This relational structure ensures that todos can be grouped under categories for better organization.
+
+#### 2. How did you handle pagination and filtering in the database?
+
+- **Pagination**: Implemented using `page` and `limit` parameters in Prisma queries. For example:
+  ```typescript
+  const todos = await prisma.todo.findMany({
+    skip: (page - 1) * limit,
+    take: limit,
+  });
+  ```
+- **Filtering**: Used dynamic Prisma queries to filter by `title`, `priority`, and `status`. Indexes were added on frequently queried fields like `title` and `categoryId` for performance optimization.
+
+### B. Technical Decisions
+
+#### 1. What backend architecture did you choose and why?
+
+- **NestJS Modular Architecture**: Organized into `Controllers`, `Repository`, `Services`, and `Modules` for separation of concerns. This structure ensures scalability and maintainability.
+- **Global Error Handling**: Used HTTP exceptions and custom interceptors for consistent error responses.
+
+#### 2. How did you handle data validation?
+
+- **Backend Validation**: Used `class-validator` in DTOs to enforce validation rules.
+  ```typescript
+  @IsString()
+  title: string;
+  ```
+- **Dual-layer Validation**: Ensures data integrity both at the API layer and database layer.
+
+### C. Testing & Quality
+
+#### 1. What did you choose to unit test and why?
+
+- **Unit Tests**: Focused on `Service` methods to ensure business logic correctness.
+
+#### 2. If you had more time, what would you improve or add?
+
+- **Future Features**: Add real-time notifications for task updates and analytics dashboards & Auth.
+
+---
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Yous Sibarani : [youssibarani17@gmail.com](mailto:youssibarani17@gmail.com)
