@@ -33,6 +33,7 @@ model User {
   password String
 
   todo Todo[]
+  category Category[]
 }
 
 model Todo {
@@ -60,6 +61,9 @@ model Category {
   name String
   color String
   todo Todo[]
+
+  userId Int
+  user User @relation(fields: [userId], references: [id])
 
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
