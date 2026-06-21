@@ -9,23 +9,21 @@ import {
 
 export class CreateTodoDto {
   @IsString()
-  title: string;
+  title!: string;
 
   @IsString()
-  description: string;
+  description!: string;
 
   @IsOptional()
   @IsEnum(TodoStatus)
   status?: TodoStatus;
 
-  @IsOptional()
   @IsEnum(TodoPriority)
-  priority?: TodoPriority;
+  priority!: TodoPriority;
 
   @IsDateString()
-  due_date: string;
+  due_date!: string;
 
-  @IsOptional()
   @IsInt()
-  categoryId?: number;
+  categoryId!: number;
 }

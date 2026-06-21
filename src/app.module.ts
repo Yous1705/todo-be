@@ -5,9 +5,10 @@ import { TodoModule } from './todo/todo.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
 import { CategoryModule } from './category/category.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [TodoModule, PrismaModule, CategoryModule],
+  imports: [TodoModule, PrismaModule, CategoryModule, AuthModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

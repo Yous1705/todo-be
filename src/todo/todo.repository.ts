@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SearchTodoDto } from './dto/search-todo.dto';
-
+import { Prisma } from '@prisma/client';
 @Injectable()
 export class TodoRepository {
   constructor(private readonly prisma: PrismaService) {}
