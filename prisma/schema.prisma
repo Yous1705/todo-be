@@ -26,9 +26,19 @@ enum TodoPriority {
   URGENT
 }
 
+model User {
+  id Int @id @default(autoincrement())
+  email String @unique
+  name String
+  password String
+
+  todo Todo[]
+}
+
 model Todo {
   id Int @id @default(autoincrement())
-
+  userId Int
+  user User @relation(fields: [userId], references:[id])
   title String
   description String @db.Text
   status TodoStatus @default(INCOMPLETE)
