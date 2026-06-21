@@ -6,8 +6,11 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class CategoryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
+  findAll(userId: number) {
     return this.prisma.category.findMany({
+      where: {
+        userId,
+      },
       select: {
         id: true,
         name: true,
@@ -17,12 +20,14 @@ export class CategoryRepository {
     });
   }
 
-  findOne(categoryId: number) {
-    return this.prisma.category.findUnique({ where: { id: categoryId } });
+  findOne(userId: number, categoryId: number) {
+    return this.prisma.category.findUnique({
+      where: { userId, id: categoryId },
+    });
   }
 
-  findTodosByCategory(categoryId: number) {
-    return this.prisma.todo.findMany({ where: { categoryId } });
+  findTodosByCategory(userId: number, categoryId: number) {
+    return this.prisma.todo.findMany({ where: { userId, categoryId } });
   }
 
   create(data: Prisma.CategoryCreateInput) {
@@ -36,7 +41,7 @@ export class CategoryRepository {
     return this.prisma.category.update({ where, data });
   }
 
-  delete(categoryId: number) {
-    return this.prisma.category.delete({ where: { id: categoryId } });
+  delete(userId: number, categoryId: number) {
+    return this.prisma.category.delete({ where: { userId, id: categoryId } });
   }
 }

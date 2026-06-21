@@ -9,11 +9,11 @@ import { PaginationDto } from './dto/pagination-todo.dto';
 export class TodoService {
   constructor(private readonly repo: TodoRepository) {}
 
-  async findAll(dto: PaginationDto) {
+  async findAll(userId: number, dto: PaginationDto) {
     const page = dto.page ?? 1;
     const limit = dto.limit ?? 10;
 
-    const todos = await this.repo.findAll(page, limit);
+    const todos = await this.repo.findAll(userId, page, limit);
 
     return {
       success: true,
@@ -22,8 +22,8 @@ export class TodoService {
     };
   }
 
-  async searchTodo(dto: SearchTodoDto) {
-    const todos = await this.repo.search(dto);
+  async searchTodo(userId: number, dto: SearchTodoDto) {
+    const todos = await this.repo.search(userId, dto);
 
     return {
       success: true,
@@ -33,17 +33,35 @@ export class TodoService {
   }
 
   async createTodo(userId: number, dto: CreateTodoDto) {
-    await this.repo.create({ ...dto, user: { connect: { id: userId } } });
+    const create = await this.repo.create({
+      title: dto.title,
+      description: dto.description,
+      status: dto.status,
+      priority: dto.priority,
+      due_date: dto.due_date,
+
+      category: {
+        connect: {
+          id: dto.categoryId,
+        },
+      },
+
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+    });
 
     return {
       success: true,
       message: `todo ${dto.title} created successfully`,
-      data: dto,
+      data: create,
     };
   }
 
-  async updateTodo(todoId: number, dto: UpdateTodoDto) {
-    const todos = await this.repo.findOne(todoId);
+  async updateTodo(userId: number, todoId: number, dto: UpdateTodoDto) {
+    const todos = await this.repo.findOne(userId, todoId);
     if (!todos) throw new NotFoundException('todo not found');
 
     await this.repo.update({ id: todoId }, dto);
@@ -54,8 +72,8 @@ export class TodoService {
     };
   }
 
-  async delete(todoId: number) {
-    const todos = await this.repo.findOne(todoId);
+  async delete(userId: number, todoId: number) {
+    const todos = await this.repo.findOne(userId, todoId);
     if (!todos) throw new NotFoundException('todo not found');
 
     await this.repo.delete(todoId);

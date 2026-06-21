@@ -7,10 +7,13 @@ import { Prisma } from '@prisma/client';
 export class TodoRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(page: number, limit: number) {
+  async findAll(userId: number, page: number, limit: number) {
     const skip = (page - 1) * limit;
     const [todos, total] = await Promise.all([
       this.prisma.todo.findMany({
+        where: {
+          userId,
+        },
         skip,
         take: limit,
         orderBy: {
@@ -49,15 +52,16 @@ export class TodoRepository {
     };
   }
 
-  findOne(todoId: number) {
-    return this.prisma.todo.findUnique({ where: { id: todoId } });
+  findOne(userId: number, todoId: number) {
+    return this.prisma.todo.findUnique({ where: { userId, id: todoId } });
   }
 
-  search(dto: SearchTodoDto) {
+  search(userId: number, dto: SearchTodoDto) {
     const { title, status, priority } = dto;
 
     return this.prisma.todo.findMany({
       where: {
+        userId,
         AND: [
           title
             ? {

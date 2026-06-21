@@ -23,13 +23,13 @@ export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   @Get()
-  findAll(@Query() query: PaginationDto) {
-    return this.todoService.findAll(query);
+  findAll(@Req() req, @Query() query: PaginationDto) {
+    return this.todoService.findAll(req.user.sub, query);
   }
 
   @Get('search')
-  search(@Query() query: SearchTodoDto) {
-    return this.todoService.searchTodo(query);
+  search(@Req() req, @Query() query: SearchTodoDto) {
+    return this.todoService.searchTodo(req.user.sub, query);
   }
 
   @Post()
@@ -38,12 +38,12 @@ export class TodoController {
   }
 
   @Patch(':id')
-  update(@Param('id') todoId: number, @Body() dto: UpdateTodoDto) {
-    return this.todoService.updateTodo(todoId, dto);
+  update(@Req() req, @Param('id') todoId: number, @Body() dto: UpdateTodoDto) {
+    return this.todoService.updateTodo(req.user.sub, todoId, dto);
   }
 
   @Delete(':id')
-  delete(@Param('id') todoId: number) {
-    return this.todoService.delete(todoId);
+  delete(@Req() req, @Param('id') todoId: number) {
+    return this.todoService.delete(req.user.sub, todoId);
   }
 }

@@ -7,8 +7,8 @@ import { CategoryRepository } from './category.repository';
 export class CategoryService {
   constructor(private readonly repo: CategoryRepository) {}
 
-  async findAll() {
-    const categories = await this.repo.findAll();
+  async findAll(userId: number) {
+    const categories = await this.repo.findAll(userId);
 
     return {
       success: true,
@@ -17,11 +17,11 @@ export class CategoryService {
     };
   }
 
-  async findTodosByCategory(categoryId: number) {
-    const category = await this.repo.findOne(categoryId);
+  async findTodosByCategory(userId: number, categoryId: number) {
+    const category = await this.repo.findOne(userId, categoryId);
     if (!category) throw new NotFoundException('category not found');
 
-    const todos = await this.repo.findTodosByCategory(categoryId);
+    const todos = await this.repo.findTodosByCategory(userId, categoryId);
 
     return {
       success: true,
@@ -30,17 +30,25 @@ export class CategoryService {
     };
   }
 
-  async createCategory(dto: CreateCategoryDto) {
-    await this.repo.create(dto);
+  async createCategory(userId: number, dto: CreateCategoryDto) {
+    const create = await this.repo.create({
+      ...dto,
+      user: { connect: { id: userId } },
+    });
 
     return {
       success: true,
-      message: `category ${dto.name} created successfully`,
+      message: `category ${create.name} created successfully`,
+      data: create,
     };
   }
 
-  async updateCategory(categoryId: number, dto: UpdateCategoryDto) {
-    const category = await this.repo.findOne(categoryId);
+  async updateCategory(
+    userId: number,
+    categoryId: number,
+    dto: UpdateCategoryDto,
+  ) {
+    const category = await this.repo.findOne(userId, categoryId);
     if (!category) throw new NotFoundException('category not found');
 
     await this.repo.update({ id: categoryId }, dto);
@@ -51,11 +59,11 @@ export class CategoryService {
     };
   }
 
-  async delete(categoryId: number) {
-    const Category = await this.repo.findOne(categoryId);
+  async delete(userId: number, categoryId: number) {
+    const Category = await this.repo.findOne(userId, categoryId);
     if (!Category) throw new NotFoundException('category not found');
 
-    await this.repo.delete(categoryId);
+    await this.repo.delete(userId, categoryId);
 
     return {
       success: true,
