@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { AuthRepository } from './auth.repository';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+  constructor(private readonly repo: AuthRepository) {}
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  async register(dto: CreateAuthDto) {
+    const exist = await this.repo.findUserByEmail(dto.email);
+    if (exist) throw new ConflictException('Email sudah digunakan');
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    const hashed = await bcrypt.hash(dto.password, 10);
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+    const registerUser = await this.repo.create({
+      ...dto,
+      password: hashed,
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    return {
+      success: true,
+      message: `user ${registerUser.name} created successfully`,
+      data: registerUser,
+    };
   }
 }

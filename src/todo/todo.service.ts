@@ -32,12 +32,13 @@ export class TodoService {
     };
   }
 
-  async createTodo(dto: CreateTodoDto) {
-    await this.repo.create(dto);
+  async createTodo(userId: number, dto: CreateTodoDto) {
+    await this.repo.create({ ...dto, user: { connect: { id: userId } } });
 
     return {
       success: true,
       message: `todo ${dto.title} created successfully`,
+      data: dto,
     };
   }
 

@@ -7,13 +7,17 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { TodoService } from './todo.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { SearchTodoDto } from './dto/search-todo.dto';
 import { PaginationDto } from './dto/pagination-todo.dto';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('todo')
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
@@ -29,8 +33,8 @@ export class TodoController {
   }
 
   @Post()
-  create(@Body() dto: CreateTodoDto) {
-    return this.todoService.createTodo(dto);
+  create(@Req() req, @Body() dto: CreateTodoDto) {
+    return this.todoService.createTodo(req.user.sub, dto);
   }
 
   @Patch(':id')
