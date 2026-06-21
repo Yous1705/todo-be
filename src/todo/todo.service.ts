@@ -1,13 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { TodoRepository } from './todo.repository';
 import { SearchTodoDto } from './dto/search-todo.dto';
 import { PaginationDto } from './dto/pagination-todo.dto';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class TodoService {
-  constructor(private readonly repo: TodoRepository) {}
+  constructor(
+    private readonly repo: TodoRepository,
+    private readonly cloudinary: CloudinaryService,
+  ) {}
 
   async findAll(userId: number, dto: PaginationDto) {
     const page = dto.page ?? 1;
@@ -32,7 +41,19 @@ export class TodoService {
     };
   }
 
-  async createTodo(userId: number, dto: CreateTodoDto) {
+  async createTodo(
+    userId: number,
+    dto: CreateTodoDto,
+    files: Express.Multer.File[],
+  ) {
+    const categories = await this.repo.findCategory(dto.categoryId);
+    if (!categories) throw new NotFoundException('category not found');
+
+    if (categories.userId != userId)
+      throw new BadRequestException('category not found');
+
+    const imageUrls = await this.cloudinary.uploadMultiple(files);
+
     const create = await this.repo.create({
       title: dto.title,
       description: dto.description,
@@ -44,6 +65,9 @@ export class TodoService {
         connect: {
           id: dto.categoryId,
         },
+      },
+      images: {
+        create: imageUrls.map((url) => ({ url })),
       },
 
       user: {

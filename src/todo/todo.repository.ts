@@ -33,6 +33,7 @@ export class TodoRepository {
               color: true,
             },
           },
+          images: true,
         },
       }),
 
@@ -54,6 +55,10 @@ export class TodoRepository {
 
   findOne(userId: number, todoId: number) {
     return this.prisma.todo.findUnique({ where: { userId, id: todoId } });
+  }
+
+  findCategory(userId: number) {
+    return this.prisma.category.findFirst({ where: { userId } });
   }
 
   search(userId: number, dto: SearchTodoDto) {

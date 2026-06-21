@@ -1,4 +1,5 @@
 import { TodoPriority, TodoStatus } from '@prisma/client';
+import { Type } from 'class-transformer';
 import {
   IsDateString,
   IsEnum,
@@ -25,5 +26,6 @@ export class CreateTodoDto {
   due_date!: string;
 
   @IsInt()
+  @Type(() => Number)
   categoryId!: number;
 }

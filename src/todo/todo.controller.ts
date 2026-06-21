@@ -9,6 +9,9 @@ import {
   Query,
   UseGuards,
   Req,
+  UploadedFiles,
+  UseInterceptors,
+  BadRequestException,
 } from '@nestjs/common';
 import { TodoService } from './todo.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
@@ -16,7 +19,8 @@ import { UpdateTodoDto } from './dto/update-todo.dto';
 import { SearchTodoDto } from './dto/search-todo.dto';
 import { PaginationDto } from './dto/pagination-todo.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 @UseGuards(JwtAuthGuard)
 @Controller('todo')
 export class TodoController {
@@ -33,8 +37,29 @@ export class TodoController {
   }
 
   @Post()
-  create(@Req() req, @Body() dto: CreateTodoDto) {
-    return this.todoService.createTodo(req.user.sub, dto);
+  @UseInterceptors(
+    FilesInterceptor('images', 10, {
+      storage: memoryStorage(),
+      limits: {
+        fileSize: 40 * 1024 * 1024,
+      },
+      fileFilter(req, file, callback) {
+        if (!file.mimetype.match(/\/(jpg|jpeg|png|webp)$/)) {
+          return callback(new BadRequestException('Invalid file type'), false);
+        }
+        callback(null, true);
+      },
+    }),
+  )
+  create(
+    @Req() req,
+    @Body() dto: CreateTodoDto,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    console.log(dto);
+    console.log(dto.due_date);
+    console.log(typeof dto.due_date);
+    return this.todoService.createTodo(req.user.sub, dto, files);
   }
 
   @Patch(':id')
