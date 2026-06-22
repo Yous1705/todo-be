@@ -1,3 +1,4 @@
+import { TaskImage } from './../../node_modules/.pnpm/@prisma+client@6.19.3_prism_1d040ab5215f59f0e27ddee7f0cf082e/node_modules/.prisma/client/index.d';
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -54,7 +55,14 @@ export class TodoRepository {
   }
 
   findOne(userId: number, todoId: number) {
-    return this.prisma.todo.findUnique({ where: { userId, id: todoId } });
+    return this.prisma.todo.findUnique({
+      where: { userId, id: todoId },
+      include: {
+        category: true,
+        images: true,
+        task: { include: { taskImages: true } },
+      },
+    });
   }
 
   findCategory(userId: number) {

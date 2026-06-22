@@ -17,4 +17,20 @@ export class TaskRepository {
   findAll(todoId: number) {
     return this.prisma.task.findMany({ where: { todoId } });
   }
+
+  update(where: Prisma.TaskWhereUniqueInput, data: Prisma.TaskUpdateInput) {
+    return this.prisma.task.update({ where, data });
+  }
+
+  completeTask(data: {
+    taskId: number;
+    taskImages?: {
+      create: { url: string }[];
+    };
+  }) {
+    return this.prisma.task.update({
+      where: { id: data.taskId },
+      data: { status: 'COMPLETED', taskImages: data.taskImages },
+    });
+  }
 }

@@ -31,6 +31,17 @@ export class TodoService {
     };
   }
 
+  async findOne(userId: number, todoId: number) {
+    const todo = await this.repo.findOne(userId, todoId);
+    if (!todo) throw new NotFoundException('todo not found');
+
+    return {
+      success: true,
+      message: 'your todo list',
+      data: todo,
+    };
+  }
+
   async searchTodo(userId: number, dto: SearchTodoDto) {
     const todos = await this.repo.search(userId, dto);
 

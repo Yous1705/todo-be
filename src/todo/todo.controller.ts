@@ -36,6 +36,11 @@ export class TodoController {
     return this.todoService.searchTodo(req.user.sub, query);
   }
 
+  @Get(':id')
+  findOne(@Req() req, @Param('id') todoId: number) {
+    return this.todoService.findOne(req.user.sub, todoId);
+  }
+
   @Post()
   @UseInterceptors(
     FilesInterceptor('images', 10, {
