@@ -13,4 +13,8 @@ export class TaskRepository {
   create(data: Prisma.TaskCreateInput) {
     return this.prisma.task.create({ data });
   }
+
+  findAll(todoId: number) {
+    return this.prisma.task.findMany({ where: { todoId } });
+  }
 }

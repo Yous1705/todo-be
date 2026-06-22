@@ -22,4 +22,9 @@ export class TaskController {
   create(@Param('id') todoId: number, @Body() dto: CreateTaskDto) {
     return this.taskService.create(todoId, dto);
   }
+
+  @Get(':id')
+  findAll(@Param('id') todoId: number) {
+    return this.taskService.findAll(todoId);
+  }
 }

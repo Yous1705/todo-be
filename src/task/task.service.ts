@@ -10,4 +10,8 @@ export class TaskService {
   create(todoId: number, dto: CreateTaskDto) {
     return this.repo.create({ ...dto, todo: { connect: { id: todoId } } });
   }
+
+  findAll(todoId: number) {
+    return this.repo.findAll(todoId);
+  }
 }
