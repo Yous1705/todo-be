@@ -7,9 +7,10 @@ import { PrismaService } from './prisma/prisma.service';
 import { CategoryModule } from './category/category.module';
 import { AuthModule } from './auth/auth.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
-  imports: [TodoModule, PrismaModule, CategoryModule, AuthModule, CloudinaryModule],
+  imports: [TodoModule, PrismaModule, CategoryModule, AuthModule, CloudinaryModule, TaskModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
