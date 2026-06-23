@@ -2,8 +2,8 @@ import { IsString, Matches } from 'class-validator';
 
 export class CreateCategoryDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsString()
-  color: string;
+  color!: string;
 }

@@ -62,8 +62,8 @@ export class TodoController {
     @UploadedFiles() files: Express.Multer.File[],
   ) {
     console.log(dto);
-    console.log(dto.due_date);
-    console.log(typeof dto.due_date);
+    console.log(dto.categoryId);
+    console.log(typeof dto.categoryId);
     return this.todoService.createTodo(req.user.sub, dto, files);
   }
 

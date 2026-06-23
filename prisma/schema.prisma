@@ -92,6 +92,7 @@ model Task {
   id Int @id @default(autoincrement())
   todoId Int
   todo Todo @relation(fields: [todoId], references:[id])
+  description String? @db.Text
 
   title String
   status TaskStatus @default(INCOMPLETE)

@@ -57,7 +57,7 @@ export class TodoService {
     dto: CreateTodoDto,
     files: Express.Multer.File[],
   ) {
-    const categories = await this.repo.findCategory(dto.categoryId);
+    const categories = await this.repo.findCategory(userId, dto.categoryId);
     if (!categories) throw new NotFoundException('category not found');
 
     if (categories.userId != userId)
