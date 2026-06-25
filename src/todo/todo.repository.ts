@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SearchTodoDto } from './dto/search-todo.dto';
-import { Prisma, TaskStatus } from '@prisma/client';
+import { Prisma, TaskStatus, TodoStatus } from '@prisma/client';
 import { TodoTaskQueryDto } from './dto/todo-task-query.dto';
 @Injectable()
 export class TodoRepository {
@@ -175,5 +175,19 @@ export class TodoRepository {
 
   delete(todoId: number) {
     return this.prisma.todo.delete({ where: { id: todoId } });
+  }
+
+  completeTodo(todoId: number) {
+    return this.prisma.todo.update({
+      where: { id: todoId },
+      data: { status: TodoStatus.COMPLETED },
+    });
+  }
+
+  unCompleteTodo(todoId: number) {
+    return this.prisma.todo.update({
+      where: { id: todoId },
+      data: { status: TodoStatus.INCOMPLETE },
+    });
   }
 }

@@ -11,6 +11,7 @@ import { SearchTodoDto } from './dto/search-todo.dto';
 import { PaginationDto } from './dto/pagination-todo.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { TodoTaskQueryDto } from './dto/todo-task-query.dto';
+import { TaskStatus, TodoStatus } from '@prisma/client';
 
 @Injectable()
 export class TodoService {
@@ -37,6 +38,18 @@ export class TodoService {
 
     if (!todo) {
       throw new NotFoundException('todo not found');
+    }
+
+    const allTaskStatus =
+      todo.task.length > 0 &&
+      todo.task.every((task) => task.status === TaskStatus.COMPLETED);
+
+    if (allTaskStatus && todo.status !== TodoStatus.COMPLETED) {
+      await this.repo.completeTodo(todoId);
+    }
+
+    if (!allTaskStatus && todo.status === TodoStatus.COMPLETED) {
+      await this.repo.unCompleteTodo(todoId);
     }
 
     return {
