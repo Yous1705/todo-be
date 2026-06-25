@@ -10,6 +10,7 @@ import {
   UploadedFiles,
   UseInterceptors,
   BadRequestException,
+  Req,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -35,6 +36,11 @@ export class TaskController {
   @Patch(':id')
   update(@Param('id') todoId: number, @Body() dto: UpdateTaskDto) {
     return this.taskService.update(todoId, dto);
+  }
+
+  @Patch(':id/start')
+  startTask(@Req() req, @Param('id') taskId: number) {
+    return this.taskService.startTask(req.user.sub, taskId);
   }
 
   @Patch(':id/complete')

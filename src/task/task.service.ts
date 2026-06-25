@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskRepository } from './task.repository';
@@ -25,6 +29,30 @@ export class TaskService {
     return {
       success: true,
       message: `task ${result.title} updated successfully`,
+      data: result,
+    };
+  }
+
+  async startTask(userId: number, taskId: number) {
+    const task = await this.repo.findById(userId, taskId);
+
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+
+    if (task.status === 'COMPLETED') {
+      throw new BadRequestException('Task already completed');
+    }
+
+    if (task.isRunning) {
+      throw new BadRequestException('Task already running');
+    }
+
+    const result = await this.repo.startTask(userId, taskId);
+
+    return {
+      success: true,
+      message: `${result.title} started`,
       data: result,
     };
   }
