@@ -10,6 +10,7 @@ import { TodoRepository } from './todo.repository';
 import { SearchTodoDto } from './dto/search-todo.dto';
 import { PaginationDto } from './dto/pagination-todo.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { TodoTaskQueryDto } from './dto/todo-task-query.dto';
 
 @Injectable()
 export class TodoService {
@@ -31,9 +32,12 @@ export class TodoService {
     };
   }
 
-  async findOne(userId: number, todoId: number) {
-    const todo = await this.repo.findOne(userId, todoId);
-    if (!todo) throw new NotFoundException('todo not found');
+  async findOne(userId: number, todoId: number, query: TodoTaskQueryDto) {
+    const todo = await this.repo.findTodoDetail(userId, todoId, query);
+
+    if (!todo) {
+      throw new NotFoundException('todo not found');
+    }
 
     return {
       success: true,

@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SearchTodoDto } from './dto/search-todo.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma, TaskStatus } from '@prisma/client';
+import { TodoTaskQueryDto } from './dto/todo-task-query.dto';
 @Injectable()
 export class TodoRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -56,10 +57,62 @@ export class TodoRepository {
   findOne(userId: number, todoId: number) {
     return this.prisma.todo.findUnique({
       where: { userId, id: todoId },
+    });
+  }
+
+  findTodoDetail(userId: number, todoId: number, query: TodoTaskQueryDto) {
+    const { search, status, sort } = query;
+    return this.prisma.todo.findUnique({
+      where: {
+        id: todoId,
+        userId,
+      },
+
       include: {
         category: true,
         images: true,
-        task: { include: { taskImages: true } },
+
+        task: {
+          where: {
+            ...(status && {
+              status: TaskStatus[status],
+            }),
+
+            ...(search && {
+              OR: [
+                {
+                  title: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  description: {
+                    contains: search,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            }),
+          },
+
+          orderBy:
+            sort === 'oldest'
+              ? {
+                  createdAt: 'asc',
+                }
+              : sort === 'alphabetical'
+                ? {
+                    title: 'asc',
+                  }
+                : {
+                    createdAt: 'desc',
+                  },
+
+          include: {
+            taskImages: true,
+          },
+        },
       },
     });
   }

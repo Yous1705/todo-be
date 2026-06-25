@@ -21,6 +21,7 @@ import { PaginationDto } from './dto/pagination-todo.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
+import { TodoTaskQueryDto } from './dto/todo-task-query.dto';
 @UseGuards(JwtAuthGuard)
 @Controller('todo')
 export class TodoController {
@@ -37,8 +38,12 @@ export class TodoController {
   }
 
   @Get(':id')
-  findOne(@Req() req, @Param('id') todoId: number) {
-    return this.todoService.findOne(req.user.sub, todoId);
+  findOne(
+    @Req() req,
+    @Param('id') todoId: number,
+    @Query() query: TodoTaskQueryDto,
+  ) {
+    return this.todoService.findOne(req.user.sub, todoId, query);
   }
 
   @Post()
