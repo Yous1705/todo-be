@@ -21,7 +21,6 @@ enum TodoStatus {
 
 enum TaskStatus {
   COMPLETED
-  IN_PROGRESS
   INCOMPLETE
 }
 
@@ -98,8 +97,14 @@ model Task {
   title String
   status TaskStatus @default(INCOMPLETE)
 
+  isRunning Boolean @default(false)
+
   startedAt DateTime?
   completedAt DateTime?
+
+  currentStartedAt DateTime?
+
+  totalDuration Int @default(0)
 
   taskImages TaskImage[]
 
