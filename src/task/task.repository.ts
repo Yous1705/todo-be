@@ -59,13 +59,33 @@ export class TaskRepository {
 
   completeTask(data: {
     taskId: number;
+
+    totalDuration: number;
+
     taskImages?: {
-      create: { url: string }[];
+      create: {
+        url: string;
+      }[];
     };
   }) {
     return this.prisma.task.update({
-      where: { id: data.taskId },
-      data: { status: 'COMPLETED', taskImages: data.taskImages },
+      where: {
+        id: data.taskId,
+      },
+
+      data: {
+        status: 'COMPLETED',
+
+        isRunning: false,
+
+        currentStartedAt: null,
+
+        completedAt: new Date(),
+
+        totalDuration: data.totalDuration,
+
+        taskImages: data.taskImages,
+      },
     });
   }
 }

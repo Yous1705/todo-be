@@ -87,21 +87,41 @@ export class TaskService {
   }
 
   async completeTask(taskId: number, files: Express.Multer.File[]) {
+    const task = await this.repo.findById(taskId);
+
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+
+    let totalDuration = task.totalDuration;
+
+    if (task.isRunning && task.currentStartedAt) {
+      const duration = Math.floor(
+        (Date.now() - task.currentStartedAt.getTime()) / 1000,
+      );
+
+      totalDuration += duration;
+    }
+
     const imageUrls = files?.length
       ? await this.cloudinary.uploadMultiple(files)
       : [];
 
     const result = await this.repo.completeTask({
       taskId,
+      totalDuration,
       taskImages: imageUrls.length
         ? {
-            create: imageUrls.map((url) => ({ url })),
+            create: imageUrls.map((url) => ({
+              url,
+            })),
           }
         : undefined,
     });
+
     return {
       success: true,
-      message: `task ${result.title} completed successfully`,
+      message: `${result.title} completed`,
       data: result,
     };
   }
