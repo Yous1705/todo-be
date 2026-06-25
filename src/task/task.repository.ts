@@ -10,25 +10,37 @@ export class TaskRepository {
     return this.prisma.todo.findUnique({ where: { userId, id: todoId } });
   }
 
-  findById(userId: number, taskId: number) {
+  findById(taskId: number) {
     return this.prisma.task.findUnique({
       where: {
-        userId,
         id: taskId,
       },
     });
   }
 
-  startTask(userId: number, taskId: number) {
+  startTask(taskId: number) {
     return this.prisma.task.update({
       where: {
-        userId,
         id: taskId,
       },
 
       data: {
         isRunning: true,
         currentStartedAt: new Date(),
+      },
+    });
+  }
+
+  pauseTask(taskId: number, totalDuration: number) {
+    return this.prisma.task.update({
+      where: {
+        id: taskId,
+      },
+
+      data: {
+        isRunning: false,
+        currentStartedAt: null,
+        totalDuration,
       },
     });
   }

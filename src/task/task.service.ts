@@ -33,8 +33,8 @@ export class TaskService {
     };
   }
 
-  async startTask(userId: number, taskId: number) {
-    const task = await this.repo.findById(userId, taskId);
+  async startTask(taskId: number) {
+    const task = await this.repo.findById(taskId);
 
     if (!task) {
       throw new NotFoundException('Task not found');
@@ -48,11 +48,40 @@ export class TaskService {
       throw new BadRequestException('Task already running');
     }
 
-    const result = await this.repo.startTask(userId, taskId);
+    const result = await this.repo.startTask(taskId);
 
     return {
       success: true,
       message: `${result.title} started`,
+      data: result,
+    };
+  }
+
+  async pauseTask(taskId: number) {
+    const task = await this.repo.findById(taskId);
+
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+
+    if (!task.isRunning) {
+      throw new BadRequestException('Task is not running');
+    }
+
+    const now = new Date();
+
+    const duration = Math.floor(
+      (now.getTime() - task.currentStartedAt!.getTime()) / 1000,
+    );
+
+    const result = await this.repo.pauseTask(
+      taskId,
+      task.totalDuration + duration,
+    );
+
+    return {
+      success: true,
+      message: `${result.title} paused`,
       data: result,
     };
   }

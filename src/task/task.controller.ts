@@ -39,8 +39,13 @@ export class TaskController {
   }
 
   @Patch(':id/start')
-  startTask(@Req() req, @Param('id') taskId: number) {
-    return this.taskService.startTask(req.user.sub, taskId);
+  startTask(@Param('id') taskId: number) {
+    return this.taskService.startTask(taskId);
+  }
+
+  @Patch(':id/pause')
+  pauseTask(@Param('id') taskId: number) {
+    return this.taskService.pauseTask(taskId);
   }
 
   @Patch(':id/complete')
