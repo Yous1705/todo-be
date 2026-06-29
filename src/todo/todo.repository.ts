@@ -10,47 +10,127 @@ export class TodoRepository {
 
   async findAll(userId: number, page: number, limit: number) {
     const skip = (page - 1) * limit;
-    const [todos, total] = await Promise.all([
-      this.prisma.todo.findMany({
-        where: {
-          userId,
-        },
-        skip,
-        take: limit,
-        orderBy: {
-          createdAt: 'desc',
-        },
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          status: true,
-          priority: true,
-          due_date: true,
-          category: {
-            select: {
-              id: true,
-              name: true,
-              color: true,
+    const [todos, totalTodo, totalTask, completedTask, pendingTask] =
+      await Promise.all([
+        this.prisma.todo.findMany({
+          where: {
+            userId,
+          },
+          skip,
+          take: limit,
+          orderBy: {
+            createdAt: 'desc',
+          },
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            status: true,
+            priority: true,
+            due_date: true,
+            category: {
+              select: {
+                id: true,
+                name: true,
+                color: true,
+              },
+            },
+            images: true,
+          },
+        }),
+
+        this.prisma.todo.count({
+          where: {
+            userId,
+          },
+        }),
+
+        this.prisma.task.count({
+          where: {
+            todo: {
+              userId,
             },
           },
-          images: true,
-        },
-      }),
+        }),
 
-      this.prisma.todo.count(),
-    ]);
+        this.prisma.task.count({
+          where: {
+            todo: {
+              userId,
+            },
+            status: TodoStatus.COMPLETED,
+          },
+        }),
+
+        this.prisma.task.count({
+          where: {
+            todo: {
+              userId,
+            },
+            status: TodoStatus.INCOMPLETE,
+          },
+        }),
+      ]);
 
     return {
       data: todos,
+      statistics: {
+        totalTodo,
+        totalTask,
+        completedTask,
+        pendingTask,
+      },
       meta: {
-        total,
         page,
         limit,
-        totalPages: Math.ceil(total / limit),
-        hasNextPage: page < Math.ceil(total / limit),
+        totalPages: Math.ceil(totalTodo / limit),
+        hasNextPage: page < Math.ceil(totalTodo / limit),
         hasPreviousPage: page > 1,
       },
+    };
+  }
+
+  async findStats(userId: number) {
+    const [totalTodo, totalTask, completedTask, pendingTask] =
+      await Promise.all([
+        this.prisma.todo.count({
+          where: {
+            userId,
+          },
+        }),
+
+        this.prisma.task.count({
+          where: {
+            todo: {
+              userId,
+            },
+          },
+        }),
+
+        this.prisma.task.count({
+          where: {
+            todo: {
+              userId,
+            },
+            status: TodoStatus.COMPLETED,
+          },
+        }),
+
+        this.prisma.task.count({
+          where: {
+            todo: {
+              userId,
+            },
+            status: TodoStatus.INCOMPLETE,
+          },
+        }),
+      ]);
+
+    return {
+      totalTodo,
+      totalTask,
+      completedTask,
+      pendingTask,
     };
   }
 

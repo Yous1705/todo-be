@@ -32,6 +32,11 @@ export class TodoController {
     return this.todoService.findAll(req.user.sub, query);
   }
 
+  @Get('stats')
+  findStats(@Req() req) {
+    return this.todoService.findStats(req.user.sub);
+  }
+
   @Get('search')
   search(@Req() req, @Query() query: SearchTodoDto) {
     return this.todoService.searchTodo(req.user.sub, query);

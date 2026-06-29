@@ -33,6 +33,16 @@ export class TodoService {
     };
   }
 
+  async findStats(userId: number) {
+    const stats = await this.repo.findStats(userId);
+
+    return {
+      success: true,
+      message: 'your todo stats',
+      data: stats,
+    };
+  }
+
   async findOne(userId: number, todoId: number, query: TodoTaskQueryDto) {
     const todo = await this.repo.findTodoDetail(userId, todoId, query);
 
